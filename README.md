@@ -59,7 +59,7 @@ will tell you if one translation is missing a field — run `npm run typecheck`.
 | Services and deliverables | `services.items` |
 | Client quotes | `testimonials.items` |
 | Studio numbers | `studio.stats` |
-| Canonical domain | `NEXT_PUBLIC_SITE_URL` (see `.env.example`) |
+| Canonical domain | `NEXT_PUBLIC_SITE_URL` (optional — see below) |
 
 > The six case studies, the client quotes and the stats are **placeholders**.
 > Replace them before the site goes live.
@@ -139,5 +139,20 @@ switch off entirely, and the CSS collapses animation and transition durations.
 
 ## Deploying
 
-Zero-config on Vercel: import the repo, set `NEXT_PUBLIC_SITE_URL`, deploy. Any
-Node host works too — `npm run build && npm run start`.
+Zero-config on Vercel: import the repo and deploy. Any Node host works too —
+`npm run build && npm run start`.
+
+### The canonical URL
+
+`sitemap.xml`, `robots.txt` and the `metadataBase` for Open Graph tags all need
+an absolute origin. It resolves in this order:
+
+1. `NEXT_PUBLIC_SITE_URL`
+2. `VERCEL_PROJECT_PRODUCTION_URL`, then `VERCEL_URL` — set by Vercel itself
+3. `https://aktays.com`
+
+So on Vercel you can leave it unset and previews still get correct canonicals.
+A bare host (`aktays.com`) is accepted alongside a full origin, and a value that
+can't be parsed is ignored with a warning in the build log instead of failing
+the build — a malformed environment variable should not be able to take the
+site down.

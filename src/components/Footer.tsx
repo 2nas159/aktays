@@ -1,4 +1,6 @@
+import Link from "next/link";
 import type { Content } from "@/content";
+import { getLegal } from "@/content/legal";
 import type { Locale } from "@/i18n/config";
 import Clock from "./Clock";
 import Parallax from "./motion/Parallax";
@@ -6,6 +8,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Footer({ content, locale }: { content: Content; locale: Locale }) {
   const { footer, contact } = content;
+  const legal = getLegal(locale);
   const year = new Date().getFullYear();
 
   return (
@@ -34,7 +37,22 @@ export default function Footer({ content, locale }: { content: Content; locale: 
           </p>
         </Parallax>
 
-        <div className="mt-12 flex flex-col gap-5 border-t border-canvas/15 pt-6 md:flex-row md:items-center md:justify-between">
+        <nav
+          aria-label={legal.index.eyebrow}
+          className="mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-canvas/15 pt-6"
+        >
+          {legal.docs.map((doc) => (
+            <Link
+              key={doc.slug}
+              href={`/${locale}/legal/${doc.slug}`}
+              className="label link-underline text-canvas/60 transition-colors duration-300 hover:text-canvas"
+            >
+              {doc.title}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="mt-8 flex flex-col gap-5 border-t border-canvas/15 pt-6 md:flex-row md:items-center md:justify-between">
           <p className="label text-canvas/50">
             © {year} Aktays. {footer.rights}
           </p>

@@ -2,11 +2,13 @@
 
 import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import { useState } from "react";
+import Link from "next/link";
 import type { Content } from "@/content";
+import type { Locale } from "@/i18n/config";
 import SectionHeading from "./SectionHeading";
 import ProjectVisual from "./ProjectVisual";
 
-export default function Work({ content }: { content: Content }) {
+export default function Work({ content, locale }: { content: Content; locale: Locale }) {
   const { work } = content;
   const [active, setActive] = useState<number | null>(null);
 
@@ -34,9 +36,9 @@ export default function Work({ content }: { content: Content }) {
         {/* Desktop: a quiet list, with the artwork riding the cursor. */}
         <div className="mt-16 hidden md:block" onMouseMove={trackPointer}>
           {work.projects.map((project, index) => (
-            <a
+            <Link
               key={project.slug}
-              href="#contact"
+              href={`/${locale}/work/${project.slug}`}
               data-cursor={work.caseLabel}
               onMouseEnter={() => setActive(index)}
               onMouseLeave={() => setActive(null)}
@@ -78,7 +80,7 @@ export default function Work({ content }: { content: Content }) {
                   ↗
                 </span>
               </motion.span>
-            </a>
+            </Link>
           ))}
 
           <AnimatePresence>
@@ -100,7 +102,11 @@ export default function Work({ content }: { content: Content }) {
         {/* Mobile: the same projects as cards, since there is no cursor to follow. */}
         <div className="mt-12 grid gap-10 md:hidden">
           {work.projects.map((project, index) => (
-            <a key={project.slug} href="#contact" className="block">
+            <Link
+              key={project.slug}
+              href={`/${locale}/work/${project.slug}`}
+              className="block"
+            >
               <div className="aspect-[4/5] w-full">
                 <ProjectVisual project={project} index={index} />
               </div>
@@ -119,8 +125,20 @@ export default function Work({ content }: { content: Content }) {
                   </span>
                 ))}
               </div>
-            </a>
+            </Link>
           ))}
+        </div>
+
+        <div className="mt-16 border-t border-canvas/15 pt-8">
+          <Link
+            href={`/${locale}/work`}
+            className="label link-underline inline-flex items-center gap-3"
+          >
+            {work.allLabel}
+            <span aria-hidden className="flip-rtl">
+              →
+            </span>
+          </Link>
         </div>
       </div>
     </section>

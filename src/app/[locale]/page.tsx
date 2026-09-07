@@ -33,8 +33,8 @@ export default async function HomePage({
       <main id="top">
         <Hero content={content} />
         <Marquee items={content.marquee} />
-        <Services content={content} />
-        <Work content={content} />
+        <Services content={content} locale={locale} />
+        <Work content={content} locale={locale} />
         <Approach content={content} />
         <Testimonials content={content} />
         <Studio content={content} />

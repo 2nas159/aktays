@@ -2,10 +2,12 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import Link from "next/link";
 import type { Content } from "@/content";
+import type { Locale } from "@/i18n/config";
 import SectionHeading from "./SectionHeading";
 
-export default function Services({ content }: { content: Content }) {
+export default function Services({ content, locale }: { content: Content; locale: Locale }) {
   const { services } = content;
   const [open, setOpen] = useState<string | null>(services.items[0]?.id ?? null);
 
@@ -90,6 +92,17 @@ export default function Services({ content }: { content: Content }) {
             </div>
           );
         })}
+      </div>
+      <div className="mt-12">
+        <Link
+          href={`/${locale}/services`}
+          className="label link-underline inline-flex items-center gap-3 text-ink"
+        >
+          {services.eyebrow}
+          <span aria-hidden className="flip-rtl">
+            →
+          </span>
+        </Link>
       </div>
     </section>
   );

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { Content } from "@/content";
 import type { Locale } from "@/i18n/config";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -18,6 +19,7 @@ export default function Nav({ content, locale }: Props) {
   const [open, setOpen] = useState(false);
   const [onDark, setOnDark] = useState(false);
   const { scrollY } = useScroll();
+  const pathname = usePathname() || `/${locale}`;
 
   /**
    * Invert the header wherever it overlaps a dark section. `mix-blend-difference`
@@ -47,11 +49,13 @@ export default function Nav({ content, locale }: Props) {
   });
 
   const links = [
-    { label: nav.work, href: "#work" },
-    { label: nav.services, href: "#services" },
-    { label: nav.approach, href: "#approach" },
-    { label: nav.studio, href: "#studio" },
+    { label: nav.work, href: `/${locale}/work` },
+    { label: nav.services, href: `/${locale}/services` },
+    { label: nav.studio, href: `/${locale}/studio` },
   ];
+
+  // Mark the section the visitor is in, including its nested routes.
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   const tone = onDark || open ? "text-canvas" : "text-ink";
 
@@ -75,9 +79,16 @@ export default function Nav({ content, locale }: Props) {
 
           <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
             {links.map((link) => (
-              <a key={link.href} href={link.href} className="label link-underline">
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={`label link-underline transition-opacity duration-300 ${
+                  isActive(link.href) ? "opacity-100" : "opacity-70 hover:opacity-100"
+                }`}
+              >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -85,9 +96,13 @@ export default function Nav({ content, locale }: Props) {
             <div className="hidden sm:block">
               <LanguageSwitcher current={locale} />
             </div>
-            <a href="#contact" className="label link-underline hidden md:inline-block">
+            <Link
+              href={`/${locale}/contact`}
+              aria-current={isActive(`/${locale}/contact`) ? "page" : undefined}
+              className="label link-underline hidden md:inline-block"
+            >
               {nav.contact}
-            </a>
+            </Link>
             <button
               type="button"
               onClick={() => setOpen((value) => !value)}
@@ -113,15 +128,15 @@ export default function Nav({ content, locale }: Props) {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             <nav className="flex flex-col gap-2" aria-label="Mobile">
-              {[...links, { label: nav.contact, href: "#contact" }].map((link) => (
-                <a
+              {[...links, { label: nav.contact, href: `/${locale}/contact` }].map((link) => (
+                <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
                   className="font-display text-h2"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </nav>
             <div className="flex items-center justify-between border-t border-canvas/20 pt-6">

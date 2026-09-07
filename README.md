@@ -33,18 +33,46 @@ npm run typecheck  # tsc --noEmit
 `/` detects the visitor's language from `Accept-Language` (and remembers their
 choice in a `NEXT_LOCALE` cookie), then redirects to `/en`, `/tr` or `/ar`.
 
+## Pages
+
+| Route | What it is |
+|---|---|
+| `/[locale]` | Homepage |
+| `/[locale]/work` | Project index |
+| `/[locale]/work/[slug]` | Case study — six of them, each prerendered per language |
+| `/[locale]/services` | The four disciplines, engagement models, FAQ |
+| `/[locale]/studio` | Story, principles, project rhythm, disciplines |
+| `/[locale]/contact` | Enquiry form and direct details |
+| `/[locale]/legal` | Index of the four legal documents |
+| `/[locale]/legal/[slug]` | `privacy`, `terms`, `cookies`, `accessibility` |
+| `/api/contact` | Form handler (POST only) |
+
+Every page is prerendered as static HTML in all three languages — 48 URLs in the
+sitemap, plus the API route.
+
 ## Editing the content
 
 **Everything you'd want to change is in `src/content/`.** No component edits needed.
 
 ```
 src/content/
-  types.ts   the shape all three languages must satisfy
-  en.ts      English copy
-  tr.ts      Turkish copy
-  ar.ts      Arabic copy
-  index.ts   locale → content lookup
+  types.ts      shape of the homepage content
+  en|tr|ar.ts   homepage copy
+  index.ts      locale → content lookup
+
+  pages/        work index, case studies, services, studio, contact
+    types.ts
+    en|tr|ar.ts
+    index.ts
+
+  legal/        privacy, terms, cookies, accessibility
+    types.ts
+    en|tr|ar.ts
+    index.ts
 ```
+
+Company registration details are **not** in the language files — they are
+identical in every language, so they live once in `src/lib/company.ts`.
 
 Change a headline, a service, a case study or the contact details in those files
 and the site updates. Because every language is typed against `Content`, TypeScript
@@ -60,9 +88,66 @@ will tell you if one translation is missing a field — run `npm run typecheck`.
 | Client quotes | `testimonials.items` |
 | Studio numbers | `studio.stats` |
 | Canonical domain | `NEXT_PUBLIC_SITE_URL` (optional — see below) |
+| Case study long-form copy | `work.studies` in each `src/content/pages/*.ts` |
+| Services FAQ and pricing | `services.faq` / `services.engagements` |
+| Legal document text | `src/content/legal/*.ts` |
+| Company registration details | `src/lib/company.ts` |
 
 > The six case studies, the client quotes and the stats are **placeholders**.
 > Replace them before the site goes live.
+
+## The contact form
+
+`POST /api/contact` validates the submission server-side, rate-limits by IP, and
+sends the enquiry through [Resend](https://resend.com).
+
+Set three environment variables to turn delivery on (see `.env.example`):
+
+| Variable | Notes |
+|---|---|
+| `RESEND_API_KEY` | From the Resend dashboard. |
+| `CONTACT_FROM_EMAIL` | Must be on a domain verified in Resend, e.g. `Aktays <hello@aktays.com>`. |
+| `CONTACT_TO_EMAIL` | Where enquiries land. Defaults to the address in `company.ts`. |
+
+**Without them the form still works** — it returns a clear "not connected"
+message pointing the visitor at your email address, and logs the submission to
+the server so no enquiry is silently lost. That means the site is safe to deploy
+before you have a Resend account.
+
+What the endpoint does:
+
+- **Validates on the server**, not just in the browser — required fields, a
+  sane email shape, a minimum message length. Field errors come back keyed by
+  field so the form can mark the right inputs.
+- **Rate-limits** to 5 submissions per IP per 10 minutes. The counter is held in
+  module memory, so on serverless it is per-instance — enough to stop a naive
+  flood, not a determined attacker. Move it to Vercel KV or Upstash if the form
+  ever gets targeted.
+- **Traps bots** with a hidden `website` field. If it is filled the endpoint
+  returns success and sends nothing, so the bot learns nothing.
+- **Escapes all input** before it goes into the HTML email.
+- **Sets `reply_to`** to the sender, so hitting reply answers the person.
+- **Caps field lengths** before processing, so a huge payload cannot be used to
+  inflate an email.
+
+## Legal pages
+
+Four documents, in all three languages, written for **Turkish (KVKK) and EU
+(GDPR)** law, and reflecting what this site actually does rather than boilerplate
+— one functional cookie, no analytics, and the Google Fonts request disclosed
+explicitly because it discloses visitor IPs to Google.
+
+⚠ **Two things before these go live:**
+
+1. **Fill in `src/lib/company.ts`.** The registered name, address, trade registry
+   number, tax office and tax number are bracketed placeholders and render as
+   such on the page.
+2. **Have a lawyer read them.** These are carefully written and specific to this
+   site, but they are not legal advice, and the KVKK registration obligations
+   (VERBİS) depend on facts about your business that are not visible from here.
+
+If you add analytics later, the Cookie Policy stops being true — it currently
+states plainly that the site runs none.
 
 ### Adding a fourth language
 

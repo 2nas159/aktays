@@ -57,6 +57,21 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dir} className="grain">
       <head>
+        {/*
+          Take scroll restoration off the browser before it can act. On a hard
+          load or reload it would otherwise drop you back at your previous
+          offset — which on a page with an intro curtain and scroll-triggered
+          reveals means landing mid-article, under the preloader, with
+          everything above you never having animated in. This has to run inline
+          in <head>: a React effect can fire after the browser has restored.
+          Client-side back/forward is unaffected — the App Router restores that
+          itself from history state.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "if('scrollRestoration' in history)history.scrollRestoration='manual';",
+          }}
+        />
         {/* Preload only the faces this locale paints with immediately. The rest
             are matched by unicode-range and fetched only if actually needed. */}
         {preloadedFonts.map((file) => (

@@ -9,6 +9,16 @@ import Lenis from "lenis";
  */
 export default function SmoothScroll() {
   useEffect(() => {
+    /*
+     * Start a fresh page load at the top, unless the URL points at an anchor
+     * (the legal pages link into their own sections). This runs once per hard
+     * load — the layout persists across client-side navigation, so it does not
+     * interfere with the router's own scrolling.
+     */
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduced.matches) return;
 
@@ -18,6 +28,12 @@ export default function SmoothScroll() {
       smoothWheel: true,
       touchMultiplier: 1.6,
     });
+
+    // Lenis samples the current offset on creation; make sure its internal
+    // position agrees with where we just put the page.
+    if (!window.location.hash) {
+      lenis.scrollTo(0, { immediate: true });
+    }
 
     let frame = 0;
     const raf = (time: number) => {

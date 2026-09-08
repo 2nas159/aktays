@@ -70,11 +70,11 @@ export const tr: LegalContent = {
           heading: "Kiminle paylaşıyoruz",
           body: [
             "Her biri talimatlarımız doğrultusunda veri işleyen sıfatıyla hareket eden az sayıda hizmet sağlayıcı kullanıyoruz. Kişisel verilerinizi başka kimseyle paylaşmıyoruz.",
+            "Yazı karakterlerimiz bir font CDN'inden değil doğrudan bu alan adından sunuluyor; dolayısıyla bir sayfayı açmanız hiçbir üçüncü tarafa veri göndermiyor.",
           ],
           bullets: [
             "Vercel Inc. — web sitesi barındırma ve sunucu kayıtları.",
             "Resend (Plus Five Five, Inc.) — form üzerinden gönderilen başvuru e-postalarının iletimi.",
-            "Google LLC — bu site yazı karakterlerini Google Fonts üzerinden yükler. Bu nedenle bir sayfayı açtığınızda tarayıcınız Google sunucularına istek yapar ve bu istek IP adresinizi ve tarayıcı bilginizi Google'a bildirir. Bu istekle çerez kurulmaz. Bundan kaçınmak isterseniz bir içerik engelleyici isteği durdurur; site yedek yazı karakterleriyle tam olarak kullanılabilir kalır.",
             "E-posta sağlayıcımız — çünkü başvurunuz gelen kutumuza düşer ve orada kalır.",
           ],
         },
@@ -251,12 +251,11 @@ export const tr: LegalContent = {
           ],
         },
         {
-          heading: "Çerez olmayan üçüncü parti istekler",
+          heading: "Üçüncü parti istekler",
           body: [
-            "Çerez içermese de tarayıcınızın bizden başka biriyle konuşmasını gerektirdiği için adını anmaya değer iki şey var.",
+            "Yok. Yazı karakterlerimiz bir font CDN'inden değil doğrudan bu alan adından sunuluyor; dolayısıyla bir sayfayı açmak bizden başka kimseyle iletişim kurmuyor. Adını anmaya değer tek şey kendi barındırma altyapımız.",
           ],
           bullets: [
-            "Google Fonts: yazı karakterlerimiz Google sunucularından yüklenir; tarayıcınız bunları Google'dan ister ve bu istek IP adresinizi ve tarayıcı bilginizi bildirir. Çerez kurulmaz. Bir içerik engelleyici bunu durdurur ve site yedek yazı karakterleriyle kullanılabilir kalır.",
             "Barındırma kayıtları: barındırma sağlayıcımız Vercel, güvenlik ve süreklilik için IP adresleri dâhil standart sunucu kayıtları tutar. Bu bir çerez değil altyapı kaydıdır ve siteyi ziyaret etmemek dışında devre dışı bırakılamaz.",
           ],
         },
@@ -313,7 +312,6 @@ export const tr: LegalContent = {
             "Vaka çalışması görselleri dekoratiftir ve bilgi taşımadığı için metin alternatifi içermez. Gerçek fotoğraflarla değiştirirsek bunun yeniden ele alınması gerekecek.",
             "Özel imleç dekoratiftir ve yalnızca hassas işaretleme cihazlarında görünür; azaltılmış hareket tercihinde gizlenir ancak her yardımcı teknoloji kombinasyonuyla test edilmemiştir.",
             "Bağımsız bir erişilebilirlik denetimi yaptırmadık. Testlerimiz kapsamlı ama kendi testlerimiz.",
-            "Yazı karakterleri üçüncü taraf bir servisten yükleniyor. Bu istek engellenir veya yavaşlarsa yedek karakterler kullanılır ve satır uzunlukları biraz kayar.",
           ],
         },
         {

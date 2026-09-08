@@ -49,15 +49,26 @@ export default async function LocaleLayout({
 
   const { dir } = localeMeta[locale];
 
+  const preloadedFonts =
+    dir === "rtl"
+      ? ["ibm-plex-sans-arabic-arabic-400-normal.woff2", "amiri-arabic-400-normal.woff2"]
+      : ["inter-tight-latin-400-normal.woff2", "instrument-serif-latin-400-normal.woff2"];
+
   return (
     <html lang={locale} dir={dir} className="grain">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Amiri:ital@0;1&display=swap"
-          rel="stylesheet"
-        />
+        {/* Preload only the faces this locale paints with immediately. The rest
+            are matched by unicode-range and fetched only if actually needed. */}
+        {preloadedFonts.map((file) => (
+          <link
+            key={file}
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href={`/fonts/${file}`}
+            crossOrigin="anonymous"
+          />
+        ))}
         <meta name="theme-color" content="#f2f0ea" />
       </head>
       <body>

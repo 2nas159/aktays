@@ -134,8 +134,8 @@ What the endpoint does:
 
 Four documents, in all three languages, written for **Turkish (KVKK) and EU
 (GDPR)** law, and reflecting what this site actually does rather than boilerplate
-— one functional cookie, no analytics, and the Google Fonts request disclosed
-explicitly because it discloses visitor IPs to Google.
+— one functional cookie, no analytics, and no third-party requests at all,
+since the typefaces are self-hosted.
 
 ⚠ **Two things before these go live:**
 
@@ -187,8 +187,42 @@ Tokens live at the top of `src/app/globals.css`, in the Tailwind v4 `@theme` blo
 Arabic overrides the display scale and line-height in the `[dir="rtl"]` block —
 Arabic sets on a taller line, so the Latin sizes would overflow.
 
-Fonts load from Google Fonts via `<link>` in `src/app/[locale]/layout.tsx`. To
-self-host, drop the files in `public/fonts` and swap in `next/font/local`.
+## Typefaces
+
+Fonts are **self-hosted** — served from this origin, not a font CDN. Loading a
+page makes no third-party request at all, so no visitor IP is disclosed to
+Google or anyone else. This is a GDPR/KVKK consideration as much as a
+performance one, and the legal pages state it as fact.
+
+```
+public/fonts/          14 woff2 files, 511 KB total
+src/app/fonts.css      generated @font-face rules
+```
+
+Faces are split by `unicode-range`, so a visitor downloads only the scripts they
+actually read:
+
+| Visitor | Downloads |
+|---|---|
+| English / Turkish | Instrument Serif + Inter Tight latin — ~84 KB |
+| Arabic | IBM Plex Sans Arabic + Amiri arabic — ~150 KB |
+
+The Arabic families ship the **arabic subset only**. Latin characters inside
+Arabic pages fall through the font stack to Inter Tight and Instrument Serif,
+which are already loaded — so nothing is downloaded twice.
+
+`src/app/[locale]/layout.tsx` preloads just the two faces the current locale
+paints with first; everything else is fetched lazily if the range matches.
+
+Only weight 400 is used by the design. Weight 600 is included so a real
+`<strong>` has a genuine bold face — `font-synthesis-weight` is disabled, so a
+faux bold would otherwise render identically to regular.
+
+**To change a typeface**, install the `@fontsource/<family>` package, copy the
+woff2 files into `public/fonts`, and add matching `@font-face` blocks to
+`src/app/fonts.css` (copy the `unicode-range` values from the package's own CSS
+rather than typing them by hand). Then update the family names in the `@theme`
+block of `globals.css`.
 
 ## Motion
 

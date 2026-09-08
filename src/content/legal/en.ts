@@ -70,11 +70,11 @@ export const en: LegalContent = {
           heading: "Who we share it with",
           body: [
             "We use a small number of service providers, each acting as a processor on our instructions. We do not share your personal data with anyone else.",
+            "Our typefaces are served from this domain rather than a font CDN, so simply loading a page sends nothing to any third party.",
           ],
           bullets: [
             "Vercel Inc. — website hosting and server logs.",
             "Resend (Plus Five Five, Inc.) — delivery of enquiry emails sent through the form.",
-            "Google LLC — this site loads its typefaces from Google Fonts. As a result, your browser makes a request to Google's servers when you load a page, which discloses your IP address and user-agent to Google. No cookie is set by this request. If you would prefer to avoid it, a content blocker will prevent the request; the site remains fully usable with fallback typefaces.",
             "Our email provider — because your enquiry arrives in, and remains in, our inbox.",
           ],
         },
@@ -251,12 +251,11 @@ export const en: LegalContent = {
           ],
         },
         {
-          heading: "Third-party requests that are not cookies",
+          heading: "Third-party requests",
           body: [
-            "Two things worth naming, because they involve your browser talking to someone other than us even though no cookie is involved.",
+            "There are none. Our typefaces are served from this domain rather than a font CDN, so loading a page contacts nobody but us. The only thing worth naming is our own hosting infrastructure.",
           ],
           bullets: [
-            "Google Fonts: our typefaces are loaded from Google's servers, so your browser requests them from Google, disclosing your IP address and user-agent. No cookie is set. A content blocker will stop this, and the site stays usable with fallback typefaces.",
             "Hosting logs: our host, Vercel, records standard server logs including IP addresses, for security and reliability. This is infrastructure logging, not a cookie, and you cannot opt out of it without not visiting the site.",
           ],
         },
@@ -315,7 +314,6 @@ export const en: LegalContent = {
             "The case-study artwork is decorative and carries no text alternative, because it conveys no information. If we replace it with real photography, that will need revisiting.",
             "The custom cursor is decorative and appears only on fine-pointer devices; it is hidden under reduced-motion preferences, but it has not been tested against every assistive technology combination.",
             "We have not commissioned an independent accessibility audit. Our testing is thorough but it is our own.",
-            "Typefaces load from a third-party service. If that request is blocked or slow, fallback fonts are used and line lengths shift slightly.",
           ],
         },
         {

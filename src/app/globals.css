@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 @theme {
   /* ---- Palette : warm paper, ink, one vermillion accent ---- */

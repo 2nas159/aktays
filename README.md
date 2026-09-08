@@ -195,17 +195,20 @@ Google or anyone else. This is a GDPR/KVKK consideration as much as a
 performance one, and the legal pages state it as fact.
 
 ```
-public/fonts/          14 woff2 files, 511 KB total
+public/fonts/          13 woff2 files, 436 KB total
 src/app/fonts.css      generated @font-face rules
 ```
 
 Faces are split by `unicode-range`, so a visitor downloads only the scripts they
 actually read:
 
-| Visitor | Downloads |
+| Visitor | First paint |
 |---|---|
-| English / Turkish | Instrument Serif + Inter Tight latin — ~84 KB |
-| Arabic | IBM Plex Sans Arabic + Amiri arabic — ~150 KB |
+| English / Turkish | Instrument Serif + Inter Tight latin — ~42 KB |
+| Arabic | IBM Plex Sans Arabic + Amiri arabic — ~147 KB |
+
+Latin-ext (Turkish diacritics), the mono face and the serif italic are fetched
+only if the page actually uses them.
 
 The Arabic families ship the **arabic subset only**. Latin characters inside
 Arabic pages fall through the font stack to Inter Tight and Instrument Serif,
@@ -217,6 +220,12 @@ paints with first; everything else is fetched lazily if the range matches.
 Only weight 400 is used by the design. Weight 600 is included so a real
 `<strong>` has a genuine bold face — `font-synthesis-weight` is disabled, so a
 faux bold would otherwise render identically to regular.
+
+Arabic is set **upright only**. Italic is a Latin convention with no equivalent
+in Arabic typography, so `[dir="rtl"] .italic` resets it — which also means the
+109 KB Amiri italic face is never shipped. That rule is deliberately unlayered:
+Tailwind's `.italic` sits in the utilities layer and outranks anything in
+`base`, however specific.
 
 **To change a typeface**, install the `@fontsource/<family>` package, copy the
 woff2 files into `public/fonts`, and add matching `@font-face` blocks to

@@ -225,3 +225,17 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Arabic has no italic convention — slanting it is a Latin habit, and the
+ * accent colour already carries the emphasis. Without this the browser would
+ * synthesise an oblique from the upright face, which looks worse than either
+ * choice. Deliberately unlayered: Tailwind's `.italic` sits in the utilities
+ * layer, which outranks anything in `base` no matter how specific.
+ *
+ * It also means the Amiri italic face is never requested — 109 KB an Arabic
+ * visitor never downloads.
+ */
+[dir="rtl"] .italic {
+  font-style: normal;
+}
